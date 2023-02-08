@@ -1,6 +1,8 @@
 import { CardMembershipSharp } from '@mui/icons-material';
 import { Box, Button, Paper, TextField, Typography } from '@mui/material';
+import { addDoc, collection, doc, } from 'firebase/firestore';
 import React, { useState } from 'react';
+import { db } from '../../firebase';
 
 
 const AddItem = () => {
@@ -8,12 +10,28 @@ const AddItem = () => {
     const [protein, setProtein] = useState('');
     const [carbs, setCarbs] = useState('');
     const [fat, setFat] = useState('');
-    const [calories, setCalories] = useState();
-    const [servingSize, setServingSize] = useState();
+    const [calories, setCalories] = useState('');
+    const [servingSize, setServingSize] = useState('');
 
     
-    const handleSubmit = () => {
-        
+    const handleSubmit = async () => {
+        // buidling mealItem
+        const mealItem = {
+            name: name,
+            protein: parseInt(calories),
+            carbs: parseInt(carbs),
+            fat: parseInt(fat),
+            calories: parseInt(calories),
+            servingSize: parseInt(servingSize),
+        }
+        console.log(mealItem);
+        // adding the new mealItem doc to foodItems collection
+        try {
+            const docRef = await addDoc(collection(db, "foodItems"), mealItem);
+            console.log(docRef);
+        } catch (error) {
+            console.log(error);
+        }
     };
 
   return (
@@ -25,9 +43,8 @@ const AddItem = () => {
         <Paper
             elevation={6}
             sx={{ p: "2", display: "flex", flexDirection: "column",
-                alignItems: "center", justifyContent: "center",}}
+                alignItems: "center", justifyContent: "center", width: "80%"}}
         >
-            <form onSubmit={handleSubmit}>
                 <TextField
                     variant='standard'
                     label="Name"
@@ -85,14 +102,13 @@ const AddItem = () => {
                 <Box display="flex"  justifyContent="center">
                     <Button
                         sx={{m: 3,}}
-                        type='submit'
+                        onClick={handleSubmit}
                         variant='contained'
                         color='primary'
                         fullWidth
                         
                     > Add item </Button>
                 </Box>
-            </form>
         </Paper>
     </Box>
   )

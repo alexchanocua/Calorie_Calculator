@@ -26,7 +26,7 @@ const MealCard = ({mealName, mealItems}) => {
     const totalCal = getTotalCals(mealItems);
 
     const handleAddItem = () => {
-        navigate('/addItem');
+        navigate("/addItem");
     };
 
   return (

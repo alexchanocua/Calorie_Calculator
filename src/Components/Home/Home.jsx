@@ -2,8 +2,7 @@ import React, { useEffect } from 'react';
 import getAuthUser from '../../CustomHooks/CustomHooks';
 import MealCard from '../MealCard/MealCard';
 import {userInfo, mealItem, foodItem } from '../../MockData/mockData';
-import { collection, getDoc, getDocs, where } from 'firebase/firestore';
-import { db } from '../../firebase';
+
 
 
 
