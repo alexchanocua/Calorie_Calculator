@@ -1,15 +1,20 @@
 import './App.css';
-import { Container, Paper, Typography } from '@mui/material';
-import { Box } from '@mui/system';
-import MealCard from './Components/MealCard/MealCard';
+import { Container,} from '@mui/material';
 import { Route, Routes } from 'react-router-dom';
 import Home from './Components/Home/Home';
-import Login from './Components/Home/Login/Login';
+import Login from './Components/Login/Login';
+import SignUp from './Components/SignUp/SignUp';
+import NavBar from './Components/NavBar/NavBar';
+import { onAuthStateChanged } from 'firebase/auth';
+import { useEffect, useState } from 'react';
+import { auth } from './firebase';
+import ProtectedRoute from './Components/ProtectedRoute/ProtectedRoute';
+import getAuthUser from './CustomHooks/CustomHooks';
+import AddItem from './Components/AddItem/AddItem';
 
-// mock services
-const serviceList = ["service 1", "service 2", "service 3"];
 
 function App() {
+
   return (
     // <Container>
     //   <Typography
@@ -40,14 +45,18 @@ function App() {
     //     ))}
     //   </Box>
     // </Container>
+    <>
+    
     <Container>
+      <NavBar />
       <Routes>
         <Route path="/" element={<Login/>}/>
-        <Route path="/home" element={<Home/>}/>
-
+        <Route path="/home" element={<Home/>} />
+        <Route path="/signup" element={<SignUp/>}/>
+        <Route path="/addItem" element={<AddItem />}/>
       </Routes>
     </Container>
-    
+    </>
 
   );
 }

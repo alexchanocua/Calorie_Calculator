@@ -1,14 +1,33 @@
 import { Box, Button, Paper, Typography } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { mealItem } from '../../MockData/mockData';
 
-const foodItems = ['Rice', 'Fish', 'Milk', 'Carne'];
-const buttonName = "Add Breakfast"
+
 
 // TODO: 
     // - props: 
     //  - mealItems: food items
     //  - buttonName: meal button name
-const MealCard = () => {
+const MealCard = ({mealName, mealItems}) => {
+    const navigate = useNavigate();
+
+    const getTotalCals = (items) => {
+        if(items) {
+            return mealItems.reduce(
+                (acc, currVal) => acc + currVal.calories,
+                0,
+            );
+        } else {
+            return 0;
+        }
+    }
+
+    const totalCal = getTotalCals(mealItems);
+
+    const handleAddItem = () => {
+        navigate('/addItem');
+    };
 
   return (
     <Box 
@@ -21,19 +40,19 @@ const MealCard = () => {
             sx={{mt: 3}}
             
         >
-            <Typography variant='h6' sx={{m: 2}}>Meal: X calories</Typography>
-            {foodItems.map((item) => (
+            <Typography variant='h6' sx={{m: 2}}>{mealName}: {totalCal} calories</Typography>
+            {totalCal > 0 ? mealItems.map((meal) => (
                 <ul>
                     <li>
-                        {item}
+                        {meal.name} : {meal.calories}
                     </li>
                 </ul>
-            ))}
+            )) : <p>No items</p>}
             <Box 
                 sx={{display:'flex', justifyContent: 'flex-end',}}
             >
                 {/* TODO: add link to food item page */}
-                <Button sx={{m: 2}}variant='contained'>{buttonName}</Button>
+                <Button sx={{m: 2}} onClick={handleAddItem} variant='contained'> Add to {mealName}</Button>
             </Box>
         </Paper>
     </Box>

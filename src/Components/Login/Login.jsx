@@ -1,15 +1,27 @@
 import { Box, Button, Paper, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import gif from './ronnie_coleman.gif';
+import { auth } from '../../firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 
 const Login = () => {
     // username and password states
-    const [userName, setUserName] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        // sign in the user with their email and password
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                console.log(userCredential);
+                navigate('/home', {replace: true});
+            }).catch((error) => {
+                console.log(error);
+            })
     }
 
   return (
@@ -30,10 +42,10 @@ const Login = () => {
             <form onSubmit={handleSubmit}>
                 <TextField
                     variant='standard'
-                    label="Username"
+                    label="Email"
                     size="small"
-                    value={userName}
-                    onChange={(e) => setUserName(e.target.value)}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     fullWidth
                     required
                 />
