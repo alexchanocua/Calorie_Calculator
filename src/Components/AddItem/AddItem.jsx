@@ -1,7 +1,9 @@
 import { CardMembershipSharp } from '@mui/icons-material';
 import { Box, Button, Paper, TextField, Typography } from '@mui/material';
-import { addDoc, collection, doc, } from 'firebase/firestore';
+import { addDoc, arrayUnion, collection, doc, documentId, getDoc, query, setDoc, updateDoc, where, } from 'firebase/firestore';
 import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import getAuthUser from '../../CustomHooks/CustomHooks';
 import { db } from '../../firebase';
 
 
@@ -12,7 +14,11 @@ const AddItem = () => {
     const [fat, setFat] = useState('');
     const [calories, setCalories] = useState('');
     const [servingSize, setServingSize] = useState('');
-
+    const navigate = useNavigate();
+    // userId and setItems function passed as props
+    const location = useLocation();
+    const user = getAuthUser();
+    
     
     const handleSubmit = async () => {
         // buidling mealItem
@@ -24,11 +30,16 @@ const AddItem = () => {
             calories: parseInt(calories),
             servingSize: parseInt(servingSize),
         }
-        console.log(mealItem);
         // adding the new mealItem doc to foodItems collection
         try {
-            const docRef = await addDoc(collection(db, "foodItems"), mealItem);
-            console.log(docRef);
+            // adding item to the foodItems collection
+            await addDoc(collection(db, "foodItems"), mealItem);
+            const docRef = doc(db, "userItems", user.uid);
+            // updating the meals new item with old items
+            await updateDoc(docRef, {"mealItems": arrayUnion(mealItem)}, {merge: true});
+            // const docSnap = await getDoc(docRef);
+            navigate('/home');
+            
         } catch (error) {
             console.log(error);
         }

@@ -1,6 +1,8 @@
 import { Box, Button, Paper, Typography } from '@mui/material';
+import { collection, documentId, getDocs, query, where } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { db } from '../../firebase';
 import { mealItem } from '../../MockData/mockData';
 
 
@@ -9,11 +11,25 @@ import { mealItem } from '../../MockData/mockData';
     // - props: 
     //  - mealItems: food items
     //  - buttonName: meal button name
-const MealCard = ({mealName, mealItems}) => {
+const MealCard = ({mealName, userId}) => {
     const navigate = useNavigate();
+    const [currItems, setItems] = useState([]);
+    const [mealItems, setMealItems] = useState([]);
+
+    const getMealItems = async (userId) => {
+        // building query
+        const q = query(collection(db, "userItems"), where(documentId(), '==', userId));
+        const querySnapShot = await getDocs(q);
+        const tempItems = [];
+        querySnapShot.forEach((doc, i) => {
+            tempItems.push(doc.data().mealItems);
+        })
+        
+        setMealItems(...tempItems);
+    }
 
     const getTotalCals = (items) => {
-        if(items) {
+        if(items && items.length > 0) {
             return mealItems.reduce(
                 (acc, currVal) => acc + currVal.calories,
                 0,
@@ -23,10 +39,28 @@ const MealCard = ({mealName, mealItems}) => {
         }
     }
 
+    useEffect(()  => {
+        const getItems = async () => {
+            try {
+                const q = query(collection(db, "userItems"), where(documentId(), '==', userId));
+                const querySnapShot = await getDocs(q);
+                const tempItems = [];
+                querySnapShot.forEach((doc, i) => {
+                    tempItems.push(doc.data().mealItems);
+                })
+                setMealItems(...tempItems);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        getItems();
+
+    },[userId]);
+    
     const totalCal = getTotalCals(mealItems);
 
     const handleAddItem = () => {
-        navigate("/addItem");
+        navigate('/addItem', {state: {userId: `${userId}`}});
     };
 
   return (
