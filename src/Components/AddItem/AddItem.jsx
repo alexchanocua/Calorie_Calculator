@@ -35,8 +35,15 @@ const AddItem = () => {
             // adding item to the foodItems collection
             await addDoc(collection(db, "foodItems"), mealItem);
             const docRef = doc(db, "userItems", user.uid);
+            // check if the user has items already
+            const docSnap = await getDoc(docRef);
+            if(docSnap.exists()) {
             // updating the meals new item with old items
             await updateDoc(docRef, {"mealItems": arrayUnion(mealItem)}, {merge: true});
+            } else {
+                // add the new document to the user items
+                await setDoc(doc(db, "userItems", `${user.uid}`), {mealItems: [mealItem]});
+            }
             // const docSnap = await getDoc(docRef);
             navigate('/home');
             
