@@ -1,6 +1,7 @@
 import { Box, Button, TextField, Typography } from '@mui/material';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { auth } from '../../firebase';
 import gif from './cbum.gif';
 
@@ -10,6 +11,7 @@ const SignUp = () => {
  const [email, setEmail] = useState('');
  const [password, setPassword] = useState('');
  const [confirmedPassword, setConfirmedPassword] = useState('');
+ const navigate = useNavigate();
 
  const handleSignUp = (e) => {
      e.preventDefault();
@@ -18,6 +20,7 @@ const SignUp = () => {
         createUserWithEmailAndPassword(auth, email, password)
          .then((userCredential) => {
              console.log(userCredential);
+             navigate('/home');
          }).catch((error) => {
              console.log(error.code);
              console.log(error.message);
