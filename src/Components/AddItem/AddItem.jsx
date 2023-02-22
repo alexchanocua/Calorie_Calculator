@@ -1,10 +1,9 @@
 import { CardMembershipSharp } from '@mui/icons-material';
 import { Box, Button, Paper, TextField, Typography } from '@mui/material';
-import { addDoc, arrayUnion, collection, doc, documentId, getDoc, query, setDoc, updateDoc, where, } from 'firebase/firestore';
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import getAuthUser from '../../CustomHooks/CustomHooks';
-import { db } from '../../firebase';
+import AddItemAPI from './AddItemAPI';
 
 
 const AddItem = () => {
@@ -16,7 +15,6 @@ const AddItem = () => {
     const [servingSize, setServingSize] = useState('');
     const navigate = useNavigate();
     // userId and setItems function passed as props
-    const location = useLocation();
     const user = getAuthUser();
     
     
@@ -31,25 +29,13 @@ const AddItem = () => {
             servingSize: parseInt(servingSize),
         }
         // adding the new mealItem doc to foodItems collection
-        try {
-            // adding item to the foodItems collection
-            await addDoc(collection(db, "foodItems"), mealItem);
-            const docRef = doc(db, "userItems", user.uid);
-            // check if the user has items already
-            const docSnap = await getDoc(docRef);
-            if(docSnap.exists()) {
-            // updating the meals new item with old items
-            await updateDoc(docRef, {"mealItems": arrayUnion(mealItem)}, {merge: true});
-            } else {
-                // add the new document to the user items
-                await setDoc(doc(db, "userItems", `${user.uid}`), {mealItems: [mealItem]});
-            }
-            // const docSnap = await getDoc(docRef);
+        const res = AddItemAPI({ mealItem, user });
+        // checking the response object returned
+        if(res.success === true){
             navigate('/home');
-            
-        } catch (error) {
-            console.log(error);
-        }
+        } else {
+            console.log(res.error);
+        } 
     };
 
   return (
