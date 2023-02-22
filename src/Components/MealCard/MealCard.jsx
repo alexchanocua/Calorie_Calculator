@@ -48,7 +48,11 @@ const MealCard = ({mealName, userId}) => {
                 querySnapShot.forEach((doc, i) => {
                     tempItems.push(doc.data().mealItems);
                 })
-                setMealItems(...tempItems);
+        
+                let myItems = tempItems[0].filter((item) => {
+                    return item.type === mealName;
+                })
+                setMealItems([...myItems]);
             } catch (error) {
                 console.log(error);
             }
@@ -60,7 +64,7 @@ const MealCard = ({mealName, userId}) => {
     const totalCal = getTotalCals(mealItems);
 
     const handleAddItem = () => {
-        navigate('/addItem', {state: {userId: `${userId}`}});
+        navigate('/addItem', {state: {type: mealName}});
     };
 
   return (

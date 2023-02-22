@@ -14,9 +14,9 @@ const Home = () => {
   return (
     <>
       <p>Hello, {user.email}</p>
-      <MealCard mealName={"Breakfast"} mealItems={mealItem.foodItems} userId={user.uid}/>
-      <MealCard mealName={"Lunch"} mealItems={mealItem.foodItems} userId={user.uid}/>
-      <MealCard mealName={"Dinner"} mealItems={mealItem.foodItems} userId={user.uid}/>
+      <MealCard mealName={"breakfast"} mealItems={mealItem.foodItems} userId={user.uid}/>
+      <MealCard mealName={"lunch"} mealItems={mealItem.foodItems} userId={user.uid}/>
+      <MealCard mealName={"dinner"} mealItems={mealItem.foodItems} userId={user.uid}/>
     </>
     
   )

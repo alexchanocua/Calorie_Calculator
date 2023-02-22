@@ -6,7 +6,7 @@ const AddItemAPI = async ({ mealItem, user }) => {
     let res = {success: false, error: ""};
     try {
         // adding item to the foodItems collection
-        await addDoc(collection(db, "foodItems"), mealItem);
+        // await addDoc(collection(db, "foodItems"), mealItem);
         const docRef = doc(db, "userItems", user.uid);
         // check if the user has items already
         const docSnap = await getDoc(docRef);

@@ -15,6 +15,9 @@ const AddItem = () => {
     const [servingSize, setServingSize] = useState('');
     const navigate = useNavigate();
     // userId and setItems function passed as props
+    const location = useLocation();
+    const mealType = location.state.type;
+    console.log(mealType, typeof mealType);
     const user = getAuthUser();
     
     
@@ -27,10 +30,12 @@ const AddItem = () => {
             fat: parseInt(fat),
             calories: parseInt(calories),
             servingSize: parseInt(servingSize),
+            type: mealType, 
         }
         // adding the new mealItem doc to foodItems collection
-        const res = AddItemAPI({ mealItem, user });
+        const res = await AddItemAPI({ mealItem, user });
         // checking the response object returned
+        console.log(res);
         if(res.success === true){
             navigate('/home');
         } else {
