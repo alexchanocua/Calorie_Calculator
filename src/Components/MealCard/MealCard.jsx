@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../../firebase';
 import { mealItem } from '../../MockData/mockData';
+import axios from 'axios';
 
 
 
@@ -42,17 +43,9 @@ const MealCard = ({mealName, userId}) => {
     useEffect(()  => {
         const getItems = async () => {
             try {
-                const q = query(collection(db, "userItems"), where(documentId(), '==', userId));
-                const querySnapShot = await getDocs(q);
-                const tempItems = [];
-                querySnapShot.forEach((doc, i) => {
-                    tempItems.push(doc.data().mealItems);
-                })
-        
-                let myItems = tempItems[0].filter((item) => {
-                    return item.type === mealName;
-                })
-                setMealItems([...myItems]);
+                const url = `http://localhost:3000/users/${userId}`
+                const user = await axios.get(url);
+                setMealItems([...user.data.dailyLogs[0].foodEntries])
             } catch (error) {
                 console.log(error);
             }
@@ -61,7 +54,8 @@ const MealCard = ({mealName, userId}) => {
 
     },[userId]);
     
-    const totalCal = getTotalCals(mealItems);
+    // const totalCal = getTotalCals(mealItems);
+    const totalCal = 100;
 
     const handleAddItem = () => {
         navigate('/addItem', {state: {type: mealName}});
