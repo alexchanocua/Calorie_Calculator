@@ -35,7 +35,6 @@ const AddItem = () => {
         // adding the new mealItem doc to foodItems collection
         const res = await AddItemAPI({ mealItem, user });
         // checking the response object returned
-        console.log(res);
         if(res.success === true){
             navigate('/home');
         } else {

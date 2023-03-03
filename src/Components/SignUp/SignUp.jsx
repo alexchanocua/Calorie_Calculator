@@ -3,6 +3,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../../firebase';
+import axios from 'axios';
 import gif from './cbum.gif';
 
 
@@ -13,18 +14,27 @@ const SignUp = () => {
  const [confirmedPassword, setConfirmedPassword] = useState('');
  const navigate = useNavigate();
 
- const handleSignUp = (e) => {
+ const handleSignUp = async (e) => {
      e.preventDefault();
      // sign in the user with their email and password
      if(password === confirmedPassword){
-        createUserWithEmailAndPassword(auth, email, password)
-         .then((userCredential) => {
-             console.log(userCredential);
-             navigate('/home');
-         }).catch((error) => {
-             console.log(error.code);
-             console.log(error.message);
-         })
+        try {
+            const createdUser = await createUserWithEmailAndPassword(auth, email, password);
+            const url = `http://localhost:3000/users/${createdUser.user.uid}`;
+            const response = await axios.post(url, {
+                email: email,
+                name: 'test',
+            })
+            if(response.status === 201){
+                console.log("user created successfully");
+                navigate('/home');
+            } else {
+                throw new Error("Failed to create user.");
+            }
+        } catch (error) {
+            console.log(error.code);
+            console.log(error.message);
+        }
      } else {
         console.log('passwords do not match');
      }
@@ -41,11 +51,6 @@ return (
                 
             </Box>
             <Typography style={{ fontStyle: 'italic',}}>thavage</Typography>
-        {/* <Paper
-            elevation={6}
-            sx={{ p: "2", display: "flex", flexDirection: "column",
-                alignItems: "center", justifyContent: "center",}}
-        > */}
             <form onSubmit={handleSignUp}>
                 <TextField
                     variant='standard'
