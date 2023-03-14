@@ -12,48 +12,10 @@ import axios from 'axios';
     // - props: 
     //  - mealItems: food items
     //  - buttonName: meal button name
-const MealCard = ({mealName, userId}) => {
+const MealCard = ({mealName, mealItems}) => {
     const navigate = useNavigate();
-    const [currItems, setItems] = useState([]);
-    const [mealItems, setMealItems] = useState([]);
 
-    const getMealItems = async (userId) => {
-        // building query
-        const q = query(collection(db, "userItems"), where(documentId(), '==', userId));
-        const querySnapShot = await getDocs(q);
-        const tempItems = [];
-        querySnapShot.forEach((doc, i) => {
-            tempItems.push(doc.data().mealItems);
-        })
-        
-        setMealItems(...tempItems);
-    }
-
-    const getTotalCals = (items) => {
-        if(items && items.length > 0) {
-            return mealItems.reduce(
-                (acc, currVal) => acc + currVal.calories,
-                0,
-            );
-        } else {
-            return 0;
-        }
-    }
-
-    useEffect(()  => {
-        const getItems = async () => {
-            try {
-                const url = `http://localhost:3000/users/${userId}`
-                const user = await axios.get(url);
-                setMealItems([...user.data.dailyLogs[0].foodEntries])
-            } catch (error) {
-                console.log(error);
-            }
-        }
-        getItems();
-
-    },[userId]);
-    
+    console.log("mealcard: ", typeof mealItems)
     // const totalCal = getTotalCals(mealItems);
     const totalCal = 100;
 
