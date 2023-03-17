@@ -3,7 +3,7 @@ import { Box, Button, Paper, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import getAuthUser from '../../CustomHooks/CustomHooks';
-import AddItemAPI from './AddItemAPI';
+import axios from 'axios';
 
 
 const AddItem = () => {
@@ -17,29 +17,29 @@ const AddItem = () => {
     // userId and setItems function passed as props
     const location = useLocation();
     const mealType = location.state.type;
-    console.log(mealType, typeof mealType);
+    const userDate = location.state.date;
+ 
     const user = getAuthUser();
     
     
     const handleSubmit = async () => {
-        // buidling mealItem
-        const mealItem = {
+        const url = "http://localhost:3000/foodItems/test"
+        // adding the new mealItem doc to foodEntries collection
+        const res = await axios.put(url, {data : {
+            date: userDate,
+            type: mealType,
             name: name,
+            calories: parseInt(calories),
             protein: parseInt(calories),
             carbs: parseInt(carbs),
             fat: parseInt(fat),
-            calories: parseInt(calories),
-            servingSize: parseInt(servingSize),
-            type: mealType, 
-        }
-        // adding the new mealItem doc to foodItems collection
-        const res = await AddItemAPI({ mealItem, user });
-        // checking the response object returned
-        if(res.success === true){
+            quantity: parseInt(servingSize),
+        }});
+        if(res.status === 204){
             navigate('/home');
         } else {
-            console.log(res.error);
-        } 
+            console.log("Unable to add item");
+        }
     };
 
   return (

@@ -12,15 +12,13 @@ import axios from 'axios';
     // - props: 
     //  - mealItems: food items
     //  - buttonName: meal button name
-const MealCard = ({mealName, mealItems}) => {
+const MealCard = ({mealName, mealItems, userDate }) => {
     const navigate = useNavigate();
 
-    console.log("mealcard: ", typeof mealItems)
-    // const totalCal = getTotalCals(mealItems);
     const totalCal = 100;
 
     const handleAddItem = () => {
-        navigate('/addItem', {state: {type: mealName}});
+        navigate('/addItem', {state: {type: mealName, date: userDate}});
     };
 
   return (
