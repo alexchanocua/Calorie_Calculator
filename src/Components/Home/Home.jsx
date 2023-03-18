@@ -3,6 +3,7 @@ import getAuthUser from '../../CustomHooks/CustomHooks';
 import MealCard from '../MealCard/MealCard';
 import {userInfo, mealItem, foodItem } from '../../MockData/mockData';
 import axios from 'axios';
+import { Typography } from '@mui/material';
 
 
 
@@ -12,7 +13,11 @@ const Home = () => {
   const today = new Date();
   // format the date to UTC
   const userDate = today.toISOString().slice(0, 10);
-  const [mealItems, setMealItems] = useState([]);
+  const [ mealItems, setMealItems ] = useState([]);
+  const [ protein, setProtein ] = useState(0);
+  const [ fat, setFat ] = useState(0);
+  const [ carbs, setCarbs ] = useState(0);
+  const [ totalCalories, setTotalCalories ] = useState(0);
 
   // get the user items
   useEffect( () => {
@@ -32,6 +37,10 @@ const Home = () => {
           userItems = await axios.post(url, { date: userDate  } );
         } 
         // set the foodEntries items
+        setProtein(userItems.data.totalProtein);
+        setFat(userItems.data.totalFat);
+        setCarbs(userItems.data.totalCarbs);
+        setTotalCalories(userItems.data.totalCalories);
         const currItems = userItems.data.foodEntries.map((item) => item);
         setMealItems([...currItems]);
       } catch (error) {
@@ -46,10 +55,11 @@ const Home = () => {
 
   return (
     <>
-      <p>Hello, {user.email}</p>
-      <MealCard mealName={"breakfast"} mealItems={mealItems} userDate={userDate} userId={user.uid}/>
-      <MealCard mealName={"lunch"} mealItems={mealItems} userDate={userDate} userId={user.uid}/>
-      <MealCard mealName={"dinner"} mealItems={mealItems} userDate={userDate} userId={user.uid}/>
+      <p>Hello, {user.email}, Log: {userDate}</p>
+      <Typography>Todays Macros: Protein: {protein} | Fat: {fat} | Carbs | {carbs} </Typography>
+      <MealCard mealName={"breakfast"} userDate={userDate} mealItems={mealItems} userId={user.uid}/>
+      <MealCard mealName={"lunch"} userDate={userDate} mealItems={mealItems} userId={user.uid}/>
+      <MealCard mealName={"dinner"} userDate={userDate} mealItems={mealItems} userId={user.uid}/>
     </>
     
   )

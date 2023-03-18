@@ -25,8 +25,7 @@ const AddItem = () => {
     const handleSubmit = async () => {
         const url = "http://localhost:3000/foodItems/test"
         // adding the new mealItem doc to foodEntries collection
-        const res = await axios.put(url, {data : {
-            date: userDate,
+        const res = await axios.put(url, {
             type: mealType,
             name: name,
             calories: parseInt(calories),
@@ -34,7 +33,8 @@ const AddItem = () => {
             carbs: parseInt(carbs),
             fat: parseInt(fat),
             quantity: parseInt(servingSize),
-        }});
+            date: userDate,
+        });
         if(res.status === 204){
             navigate('/home');
         } else {
