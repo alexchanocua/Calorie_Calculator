@@ -18,7 +18,20 @@ const Home = () => {
   const [ fat, setFat ] = useState(0);
   const [ carbs, setCarbs ] = useState(0);
   const [ totalCalories, setTotalCalories ] = useState(0);
+  const [breakfastItems, setBreakfastItems ] = useState([]);
+  const [lunchItems, setLunchItems ] = useState([]);
+  const [dinnerItems, setDinnerItems ] = useState([]);
 
+  // function to filter items based on their type
+  const filterMealItems = (items, type) => {
+    const filteredItems = items.filter((item) => {
+      if(item.type === type) {
+        return item;
+      }
+    });
+    console.log(filterMealItems);
+    return filteredItems;
+  }
   // get the user items
   useEffect( () => {
     console.log(userDate);
@@ -36,30 +49,31 @@ const Home = () => {
           // if there is no food entry then create a new log for the day
           userItems = await axios.post(url, { date: userDate  } );
         } 
-        // set the foodEntries items
+        // set the foodEntries items and other values
         setProtein(userItems.data.totalProtein);
         setFat(userItems.data.totalFat);
         setCarbs(userItems.data.totalCarbs);
         setTotalCalories(userItems.data.totalCalories);
         const currItems = userItems.data.foodEntries.map((item) => item);
-        setMealItems([...currItems]);
+        setBreakfastItems(filterMealItems(currItems, 'breakfast'));
+        setLunchItems(filterMealItems(currItems, 'lunch'));
+        setDinnerItems(filterMealItems(currItems, 'dinner'));
       } catch (error) {
         console.log(error);
       }
     }
-
+    // fetching user items
     fetchUserItems();
   // run whenever the date of the user changes
   },[userDate]);
-  // TODO: have a state here to hold the total cals of each meal
 
   return (
     <>
       <p>Hello, {user.email}, Log: {userDate}</p>
       <Typography>Todays Macros: Protein: {protein} | Fat: {fat} | Carbs | {carbs} </Typography>
-      <MealCard mealName={"breakfast"} userDate={userDate} mealItems={mealItems} userId={user.uid}/>
-      <MealCard mealName={"lunch"} userDate={userDate} mealItems={mealItems} userId={user.uid}/>
-      <MealCard mealName={"dinner"} userDate={userDate} mealItems={mealItems} userId={user.uid}/>
+      <MealCard mealName={"breakfast"} userDate={userDate} mealItems={breakfastItems} userId={user.uid}/>
+      <MealCard mealName={"lunch"} userDate={userDate} mealItems={lunchItems} userId={user.uid}/>
+      <MealCard mealName={"dinner"} userDate={userDate} mealItems={dinnerItems} userId={user.uid}/>
     </>
     
   )

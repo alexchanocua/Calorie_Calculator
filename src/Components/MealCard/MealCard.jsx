@@ -14,9 +14,9 @@ import axios from 'axios';
     //  - buttonName: meal button name
 const MealCard = ({mealName, mealItems, userDate }) => {
     const navigate = useNavigate();
-
-    const totalCal = 100;
-
+    // calculating the total calories
+    const totalCal = mealItems.reduce((acc, curr) => acc + curr.calories, 0);
+    // event handler for adding an item
     const handleAddItem = () => {
         navigate('/addItem', {state: {type: mealName, date: userDate}});
     };
