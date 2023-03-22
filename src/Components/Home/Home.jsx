@@ -13,7 +13,6 @@ const Home = () => {
   const today = new Date();
   // format the date to UTC
   const userDate = today.toISOString().slice(0, 10);
-  const [ mealItems, setMealItems ] = useState([]);
   const [ protein, setProtein ] = useState(0);
   const [ fat, setFat ] = useState(0);
   const [ carbs, setCarbs ] = useState(0);
@@ -53,7 +52,7 @@ const Home = () => {
         setProtein(userItems.data.totalProtein);
         setFat(userItems.data.totalFat);
         setCarbs(userItems.data.totalCarbs);
-        setTotalCalories(userItems.data.totalCalories);
+        setTotalCalories(userItems.data.totalCals);
         const currItems = userItems.data.foodEntries.map((item) => item);
         setBreakfastItems(filterMealItems(currItems, 'breakfast'));
         setLunchItems(filterMealItems(currItems, 'lunch'));
@@ -70,8 +69,9 @@ const Home = () => {
   return (
     <>
       <p>Hello, {user.email}, Log: {userDate}</p>
+      <Typography>Todays Calories: {totalCalories} </Typography>
       <Typography>Todays Macros: Protein: {protein} | Fat: {fat} | Carbs | {carbs} </Typography>
-      <MealCard mealName={"breakfast"} userDate={userDate} mealItems={breakfastItems} userId={user.uid}/>
+      <MealCard mealName={"breakfast"} userDate={userDate} setMealItems={setBreakfastItems} mealItems={breakfastItems} userId={user.uid}/>
       <MealCard mealName={"lunch"} userDate={userDate} mealItems={lunchItems} userId={user.uid}/>
       <MealCard mealName={"dinner"} userDate={userDate} mealItems={dinnerItems} userId={user.uid}/>
     </>
