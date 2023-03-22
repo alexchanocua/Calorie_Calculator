@@ -34,11 +34,6 @@ const Login = () => {
                 
             </Box>
             <Typography style={{ fontStyle: 'italic',}}>lightweight baby</Typography>
-        {/* <Paper
-            elevation={6}
-            sx={{ p: "2", display: "flex", flexDirection: "column",
-                alignItems: "center", justifyContent: "center",}}
-        > */}
             <form onSubmit={handleSubmit}>
                 <TextField
                     variant='standard'
@@ -69,7 +64,6 @@ const Login = () => {
                     > Login </Button>
                 </Box>
             </form>
-        {/* </Paper> */}
     </Box>
   )
 }

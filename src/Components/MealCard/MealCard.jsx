@@ -11,24 +11,41 @@ import axios from 'axios';
     // - props: 
     //  - mealItems: food items
     //  - buttonName: meal button name
-const MealCard = ({mealName, mealItems, userDate, setMealItems }) => {
-    const [ removedItem, setRemovedItem ] = useState('');
+const MealCard = ({mealName, mealItems, userDate, setMealItems, userId }) => {
     const navigate = useNavigate();
     // calculating the total calories
     const totalCal = mealItems.reduce((acc, curr) => acc + curr.calories, 0);
+
+    const filterMealItems = (items, type) => {
+        const filteredItems = items.filter((item) => item.type === type);
+        return filteredItems;
+      }
     // event handler for adding an item
     const handleAddItem = () => {
-        navigate('/addItem', {state: {type: mealName, date: userDate}});
+        navigate('/addItem', {state: {type: mealName, date: userDate, userId: userId}});
     };
 
-    const handleRemoveItem = () => {
-        // updating the parents mealItems
-        const newItems = mealItems.filter((item) => {
-            if(item.name != removedItem){
-                return item;
-            }
-        })
-        setMealItems(newItems);
+    const handleRemoveItem = async (meal) => {
+        console.log(meal._id);
+        try {
+            const url = `http://localhost:3000/foodItems/${userId}`;
+            const newItems = await axios.delete(url, {
+                data:{
+                    foodId: meal._id,
+                    date: userDate,
+                    calories: meal.calories,
+                    protein: meal.protein,
+                    fat: meal.fat,
+                    carbs: meal.carbs,
+                    quantity: meal.quantity 
+                }
+                
+            });
+            const currItems = newItems.data.foodEntries.map((item) => item);
+            setMealItems(filterMealItems(currItems, mealName ));
+        } catch (error) {
+            console.log(error);
+        }
     };
 
   return (
@@ -44,19 +61,12 @@ const MealCard = ({mealName, mealItems, userDate, setMealItems }) => {
         >
             <Typography variant='h6' sx={{m: 2}}>{mealName}: {totalCal} calories</Typography>
             {totalCal > 0 ? mealItems.map((meal) => (
-                // <List >
-                //     <ListItem>
-                //         <ListItemIcon>
-                //             {meal.name} : {meal.calories}
-                //         </ListItemIcon>
-                //     </ListItem>
-                // </List>
                 <List>
                     <ListItem
+                        key={meal._id}
                         secondaryAction={
                         <IconButton onClick={() => {
-                                setRemovedItem(meal.name);
-                                handleRemoveItem();
+                                handleRemoveItem(meal);
                             }} 
                             edge="end" aria-label="delete">
                             <ClearIcon  />

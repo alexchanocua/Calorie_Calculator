@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import getAuthUser from '../../CustomHooks/CustomHooks';
 import MealCard from '../MealCard/MealCard';
-import {userInfo, mealItem, foodItem } from '../../MockData/mockData';
 import axios from 'axios';
 import { Typography } from '@mui/material';
+import { getAuth } from 'firebase/auth';
 
 
 
@@ -23,21 +23,15 @@ const Home = () => {
 
   // function to filter items based on their type
   const filterMealItems = (items, type) => {
-    const filteredItems = items.filter((item) => {
-      if(item.type === type) {
-        return item;
-      }
-    });
-    console.log(filterMealItems);
+    const filteredItems = items.filter((item) => item.type === type);
     return filteredItems;
   }
   // get the user items
   useEffect( () => {
-    console.log(userDate);
     const fetchUserItems = async () => {
       try{
         // check if we have userItems for the current date
-        const url = "http://localhost:3000/foodItems/test"
+        const url = `http://localhost:3000/foodItems/${user.uid}`
         let userItems = await axios.get(url ,{
           params: {
             date: userDate,
@@ -64,7 +58,7 @@ const Home = () => {
     // fetching user items
     fetchUserItems();
   // run whenever the date of the user changes
-  },[userDate]);
+  },[userDate, user.uid]);
 
   return (
     <>
@@ -72,8 +66,8 @@ const Home = () => {
       <Typography>Todays Calories: {totalCalories} </Typography>
       <Typography>Todays Macros: Protein: {protein} | Fat: {fat} | Carbs | {carbs} </Typography>
       <MealCard mealName={"breakfast"} userDate={userDate} setMealItems={setBreakfastItems} mealItems={breakfastItems} userId={user.uid}/>
-      <MealCard mealName={"lunch"} userDate={userDate} mealItems={lunchItems} userId={user.uid}/>
-      <MealCard mealName={"dinner"} userDate={userDate} mealItems={dinnerItems} userId={user.uid}/>
+      <MealCard mealName={"lunch"} userDate={userDate} setMealItems={setLunchItems} mealItems={lunchItems} userId={user.uid}/>
+      <MealCard mealName={"dinner"} userDate={userDate} setMealItems={setDinnerItems} mealItems={dinnerItems} userId={user.uid}/>
     </>
     
   )

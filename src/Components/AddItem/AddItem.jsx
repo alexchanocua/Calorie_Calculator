@@ -23,7 +23,7 @@ const AddItem = () => {
     
     
     const handleSubmit = async () => {
-        const url = "http://localhost:3000/foodItems/test"
+        const url = `http://localhost:3000/foodItems/${user.uid}`
         // adding the new mealItem doc to foodEntries collection
         const res = await axios.put(url, {
             type: mealType,
