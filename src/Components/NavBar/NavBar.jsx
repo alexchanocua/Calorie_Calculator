@@ -8,10 +8,19 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import AuthDetails from '../AuthDetails/AuthDetails';
 
-export default function ButtonAppBar() {
+export default function NavBar() {
   return (
     <Box sx={{ flexGrow: 1, }}>
-      <AppBar sx={{color: 'black', backgroundColor: 'white',}} position="static">
+      <AppBar sx={{
+          // color: 'black', 
+          // backgroundColor: 'white',
+          // boxShadow: 'none',
+          borderRadius: '0.5rem',
+          mt: '1rem',
+          mb: '1rem'
+          
+        }} 
+        position="static">
         <Toolbar>
           <IconButton
             size="large"
@@ -26,7 +35,6 @@ export default function ButtonAppBar() {
           Meal M8
           </Typography>
           <AuthDetails/>
-          {/* <Button color="inherit">Login</Button> */}
         </Toolbar>
       </AppBar>
     </Box>

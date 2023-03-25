@@ -1,9 +1,9 @@
-import { Box, Button, Paper, TextField, Typography } from '@mui/material';
+import { Box, Button, Link, Paper, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import gif from './ronnie_coleman.gif';
 import { auth } from '../../firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 
 const Login = () => {
@@ -64,6 +64,11 @@ const Login = () => {
                     > Login </Button>
                 </Box>
             </form>
+            <RouterLink to="/signup">
+                <Link underline='hover'>
+                    Don't have an account? Sign up here ⚒️
+                </Link>
+            </RouterLink>
     </Box>
   )
 }

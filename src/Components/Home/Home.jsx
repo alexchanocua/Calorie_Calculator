@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Box, Typography } from '@mui/material';
 import { getAuth } from 'firebase/auth';
 import DateChangerButton from '../DateChangerButton/DateChangerButton';
+import NavBar from '../NavBar/NavBar';
 
 
 
@@ -12,9 +13,7 @@ import DateChangerButton from '../DateChangerButton/DateChangerButton';
 const Home = () => {
   const user = getAuthUser();
   const today = new Date();
-  // format the date to UTC
-  const userDate = today.toISOString().slice(0, 10);
-  const [currDate, setCurrDate] = useState(userDate);
+  const [currDate, setCurrDate] = useState(today.toISOString().slice(0, 10));
   const [ protein, setProtein ] = useState(0);
   const [ fat, setFat ] = useState(0);
   const [ carbs, setCarbs ] = useState(0);
@@ -28,6 +27,7 @@ const Home = () => {
     const filteredItems = items.filter((item) => item.type === type);
     return filteredItems;
   }
+
   // get the user items
   useEffect( () => {
     const fetchUserItems = async () => {
@@ -64,11 +64,12 @@ const Home = () => {
 
   return (
     <>
-      <Box sx={{display: 'flex', justifyContent: 'center',}}>
-        <DateChangerButton dateStr={currDate} setDate={setCurrDate} action={'increase'} type={'Increase'}/>
-        <DateChangerButton dateStr={currDate} setDate={setCurrDate} action={'decrease'} type={'Decrease'}/>
+      <NavBar />
+      <Box sx={{display: 'flex', justifyContent: 'center'}}>
+        <DateChangerButton dateStr={currDate} setDate={setCurrDate} action={'decrease'} type={'Prev'}/>
+        <Typography sx={{ textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center'}}> {currDate} </Typography>
+        <DateChangerButton dateStr={currDate} setDate={setCurrDate} action={'increase'} type={'Next'}/>
       </Box>
-      <p>Hello, {user.email}, Log: {currDate}</p>
       <Typography>Todays Calories: {totalCalories} </Typography>
       <Typography>Todays Macros: Protein: {protein} | Fat: {fat} | Carbs | {carbs} </Typography>
       <MealCard mealName={"breakfast"} userDate={currDate} setMealItems={setBreakfastItems} mealItems={breakfastItems} userId={user.uid}/>

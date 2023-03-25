@@ -7,11 +7,17 @@ import SignUp from './Components/SignUp/SignUp';
 import NavBar from './Components/NavBar/NavBar';
 import AddItem from './Components/AddItem/AddItem';
 import getAuthUser from './CustomHooks/CustomHooks';
+import { useState } from 'react';
+import { getAuth } from 'firebase/auth';
 
 function App() {
+  // getting the signed in user
+  const auth = getAuth();
+  const user = auth.currentUser;
+
   return (
-    <Container>
-      <NavBar />
+    <Container sx={{ height: '100vh', width: '100vw',}}>
+      {/* <NavBar /> */}
       <Routes>
         <Route path="/" element={<Login/>}/>
         <Route path="/home" element={<Home  />} />

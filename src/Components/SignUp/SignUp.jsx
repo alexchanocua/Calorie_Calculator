@@ -1,10 +1,11 @@
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button, TextField, Typography, Link } from '@mui/material';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../../firebase';
 import axios from 'axios';
 import gif from './cbum.gif';
+import { Link as RouterLink } from 'react-router-dom';
 
 
 const SignUp = () => {
@@ -12,6 +13,7 @@ const SignUp = () => {
  const [email, setEmail] = useState('');
  const [password, setPassword] = useState('');
  const [confirmedPassword, setConfirmedPassword] = useState('');
+ const [name, setName] = useState('');
  const navigate = useNavigate();
 
  const handleSignUp = async (e) => {
@@ -23,7 +25,7 @@ const SignUp = () => {
             const url = `http://localhost:3000/users/${createdUser.user.uid}`;
             const response = await axios.post(url, {
                 email: email,
-                name: 'test',
+                name: name,
             })
             if(response.status === 201){
                 console.log("user created successfully");
@@ -63,6 +65,15 @@ return (
                 />
                 <TextField
                     variant='standard'
+                    label="Name"
+                    size="small"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    fullWidth
+                    required
+                />
+                <TextField
+                    variant='standard'
                     label="Password"
                     size="small"
                     value={password}
@@ -90,7 +101,11 @@ return (
                     > Sign Up </Button>
                 </Box>
             </form>
-        
+            <RouterLink to="/">
+                <Link underline='hover'>
+                    Have an account? Log In here ⚒️
+                </Link>
+            </RouterLink>
     </Box>
 )
 };

@@ -26,15 +26,18 @@ const AuthDetails = () => {
 
     // handles sign out
     const handleSignOut = () => {
-        signOut(auth).then(() => {console.log('signed out succesful')
+        signOut(auth).then(() => {console.log('signed out succesfull')
         navigate("/");
         })
         .catch(error => console.log(error));
     }
   return (
         <>  
-          {authUser ? <><Avatar sx={{mx: 3}}/>
-            <Button variant={'contained'} size={'small'} onClick={handleSignOut}>Sign Out</Button></> 
+          {authUser ? 
+            <>
+                <Avatar sx={{mx: 3}} />
+                <Button variant={'contained'} size={'small'} onClick={handleSignOut}>Sign Out</Button>
+            </> 
             : <p>Signed Out</p>}
         </>
   );
